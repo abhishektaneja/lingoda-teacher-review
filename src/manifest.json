@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Lingoda Review Extension",
+  "version": "1.0",
+  "description": "Leave reviews for Lingoda classes and view them while booking.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["*://learn.lingoda.com/en/account/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
