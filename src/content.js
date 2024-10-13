@@ -75,8 +75,9 @@ function appendReviewForm(classDetails, teacherName, cssClasses) {
 }
 
 // Function to create and append the review display on the booking page
-async function appendReviewDisplay(teacher, classInfoDiv, teacherName, cssClasses) {
+async function appendReviewDisplay(classInfoDiv, teacherName) {
     const teacherDiv = document.createElement('div');
+    teacherDiv.classList.add('review-appended')
     const review = await getReview(teacherName);
 
     if (review) {
@@ -85,7 +86,10 @@ async function appendReviewDisplay(teacher, classInfoDiv, teacherName, cssClasse
             <div class="${cssClasses.textStyle}">Review: ${review.rating}/5</div>
             <button class="viewNote ${cssClasses.buttonStyle}">View Note</button>
         `;
-        classInfoDiv.appendChild(teacherDiv);
+        // Append the review display only if it hasn’t been added before
+        if (!classInfoDiv.querySelector('.review-appended')) {
+            classInfoDiv.appendChild(teacherDiv);
+        }
 
         teacherDiv.querySelector('.viewNote').addEventListener('click', (e) => {
             e.preventDefault();
@@ -136,18 +140,77 @@ if (window.location.href.includes('/class/details')) {
     });
 }
 
-// Main Logic for Booking Page
+// Utility function to handle dynamic elements
+function observeTeacherList(teacherListSelector, teacherInfoSelector, onTeacherFound) {
+    const teacherList = document.querySelector(teacherListSelector);
+
+    if (!teacherList) {
+        // console.warn(`No teacher list found with selector: ${teacherListSelector}`);
+        return;
+    }
+
+    const observer = new MutationObserver((mutations) => {
+        document.querySelectorAll(teacherListSelector).forEach((teacher) => {
+            const teacherInfoElement = teacher.querySelector(teacherInfoSelector);
+            if (teacherInfoElement) {
+                const teacherName = getTeacherName(teacherInfoElement);
+
+                // Check if the teacher already has a review appended
+                if (!teacher.querySelector('.review-appended')) {
+                    onTeacherFound(teacher, teacherName);
+                }
+            }
+        });
+    });
+
+    // Observe the teacher list for changes (e.g., new teachers or updates)
+    observer.observe(teacherList, {
+        childList: true,
+        subtree: true
+    });
+}
+
+
+// Main logic for the booking page
 if (window.location.href.includes('/account/booking')) {
-    const classesWrapperClassName = '.css-j7qwjs > .box.display-block';
+    const classesWrapperParentClassName = '.css-kzs7ph';
+    const classesWrapperClassName = `.css-j7qwjs > .box.display-block`;
     const teacherClassInfoClassName = '.css-rdg5qz .css-16biaea .css-1wxaqej .css-1gbo16e .css-1wxaqej .css-1wkwmmc .css-1wxaqej';
+    const classNameElement = `${classesWrapperClassName} ${teacherClassInfoClassName}`
+
+    // Function to handle processing of each teacher element
+    function processTeachers() {
+        document.querySelectorAll(classNameElement).forEach(ele => {
+            const classInfoDiv = ele.parentElement;
+            const teacherName = getTeacherName(ele);
+            if (teacherName !== "" && teacherName !== "group class" && teacherName !== "teacher will be assigned") {
+                appendReviewDisplay(classInfoDiv, teacherName);
+            }
+        });
+    }
 
     waitForElement(document, classesWrapperClassName, () => {
         document.querySelectorAll(classesWrapperClassName).forEach((teacher) => {
             waitForElement(teacher, teacherClassInfoClassName, () => {
-                const classInfoDiv = teacher.querySelectorAll(teacherClassInfoClassName)[0].parentElement;
-                const teacherName = getTeacherName(teacher.querySelectorAll(teacherClassInfoClassName)[0]);
-                appendReviewDisplay(teacher, classInfoDiv, teacherName, cssClasses);
+                waitForElement(document, classNameElement, () => {
+                    processTeachers()
+                })
             });
         });
+
+        // Set up a MutationObserver to monitor any changes in the classes wrapper
+        const classesWrapper = document.querySelector(classesWrapperParentClassName);
+        if (classesWrapper) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach(() => {
+                    processTeachers();
+                });
+            });
+
+            observer.observe(classesWrapper, {
+                childList: true,
+                subtree: true
+            });
+        }
     });
 }
