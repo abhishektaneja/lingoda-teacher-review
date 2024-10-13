@@ -28,7 +28,7 @@ function getTeacherName(teacherNameElement) {
 // Save or update review in chrome storage
 async function saveReview(teacherName, rating, note) {
     try {
-        await chrome.storage.local.set({ [teacherName]: { rating, note } });
+        await chrome.storage.local.set({[teacherName]: {rating, note}});
         console.log(`Review saved for ${teacherName}`);
     } catch (err) {
         console.error(`Failed to save review for ${teacherName}`, err);
@@ -46,7 +46,11 @@ async function getReview(teacherName) {
 
 // Function to create and append the review form
 function appendReviewForm(classDetails, teacherName, cssClasses) {
-    const btnClass = classDetails.querySelector("button").className
+    let btnClass = "css-yz1oy9"
+    const btn = classDetails.querySelector("button")
+    if (btn) {
+        btnClass = classDetails.querySelector("button").className
+    }
     const reviewForm = document.createElement('div');
     reviewForm.innerHTML = `
         <h4>Rate this class</h4>
