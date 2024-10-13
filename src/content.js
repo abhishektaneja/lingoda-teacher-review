@@ -46,14 +46,15 @@ async function getReview(teacherName) {
 
 // Function to create and append the review form
 function appendReviewForm(classDetails, teacherName, cssClasses) {
+    const btnClass = classDetails.querySelector("button").className
     const reviewForm = document.createElement('div');
     reviewForm.innerHTML = `
         <h4>Rate this class</h4>
-        <label class="${cssClasses.textStyleSecondary}">Rating:</label>
+        <label class="${cssClasses.textStyle}">Rating:</label>
         <input type="number" min="1" max="5" id="classRating" />
-        <br/><br/><label class="${cssClasses.textStyleSecondary}">Note:</label>
+        <br/><br/><label class="${cssClasses.textStyle}">Note:</label>
         <textarea id="classNote"></textarea>
-        <br/><br/><button class="${cssClasses.textStyleSecondary}" id="submitReview">Submit Review</button>
+        <br/><br/><button class="${btnClass} ${cssClasses.textStyleSecondary}" id="submitReview">Submit Review</button>
     `;
 
     classDetails.appendChild(reviewForm);
