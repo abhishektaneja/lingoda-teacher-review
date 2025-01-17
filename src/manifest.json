@@ -1,13 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Lingoda Review Extension",
+  "name": "Lingoda class review helper",
   "version": "1.0",
-  "description": "Leave reviews for Lingoda classes and view them while booking.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "description": "Will help you to review teachers on lingoda so you can find the best ones while booking next class.",
+  "permissions": ["storage"],
   "content_scripts": [
     {
       "matches": ["*://learn.lingoda.com/en/account/*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["main.css"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  }
 }

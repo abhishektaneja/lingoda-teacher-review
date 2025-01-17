@@ -1,8 +1,3 @@
-const cssClasses = {
-    textStyleSecondary: 'MuiTypography-root MuiTypography-body1 css-l0jbfn',
-    textStyle: 'MuiTypography-root MuiTypography-overline css-159wzko',
-    buttonStyle: 'MuiButtonBase-root MuiButton-outlinedSizeSmall MuiButton-disableElevation css-to0fd0',
-};
 
 // Utility function to wait for elements to appear
 function waitForElement(main, selector, callback) {
@@ -45,20 +40,35 @@ async function getReview(teacherName) {
 }
 
 // Function to create and append the review form
-function appendReviewForm(classDetails, teacherName, cssClasses) {
+function appendReviewForm(classDetails, teacherName) {
     let btnClass = "css-yz1oy9"
     const btn = classDetails.querySelector("button")
-    if (btn) {
-        btnClass = classDetails.querySelector("button").className
-    }
     const reviewForm = document.createElement('div');
     reviewForm.innerHTML = `
-        <h4>Rate this class</h4>
-        <label class="${cssClasses.textStyle}">Rating:</label>
-        <input type="number" min="1" max="5" id="classRating" />
-        <br/><br/><label class="${cssClasses.textStyle}">Note:</label>
-        <textarea id="classNote"></textarea>
-        <br/><br/><button class="${btnClass} ${cssClasses.textStyleSecondary}" id="submitReview">Submit Review</button>
+        <div class="review_form_wrapper">
+            <h4 class="text_title">Rate this class</h4>
+            <div class="form-row">
+                <div class="form-column label-column">
+                    <label class="text_secondary">Rating:</label>
+                </div>
+                <div class="form-column input-column">
+                    <input class="text_secondary" type="number" min="1" max="5" id="classRating" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column label-column">
+                    <label class="text_secondary">Note:</label>
+                </div>
+                <div class="form-column input-column">
+                    <textarea class="text_secondary" id="classNote"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column input-column">
+                    <button class="btn_submit_review text_secondary" id="submitReview">Submit Review</button>
+                </div>
+            </div>
+        </div>
     `;
 
     classDetails.appendChild(reviewForm);
@@ -79,47 +89,72 @@ function appendReviewForm(classDetails, teacherName, cssClasses) {
     });
 }
 
+// Function to convert rating number to stars
+function getStarRating(reviewRating) {
+    const rating = Math.max(1, Math.min(5, reviewRating))
+    const fullStar = '★';  // Full star symbol
+    const emptyStar = '☆'; // Empty star symbol
+    let stars = '';
+
+    for (let i = 1; i <= 5; i++) {
+        stars += i <= rating ? fullStar : emptyStar;
+    }
+
+    return stars;
+}
+
+
 // Function to create and append the review display on the booking page
 async function appendReviewDisplay(classInfoDiv, teacherName) {
     const teacherDiv = document.createElement('div');
     teacherDiv.classList.add('review-appended')
     const review = await getReview(teacherName);
-
+    let stars
     if (review) {
         console.log(`Review found for ${teacherName}:`, review);
-        teacherDiv.innerHTML = `
-            <div class="${cssClasses.textStyle}">Review: ${review.rating}/5</div>
-            <button class="viewNote ${cssClasses.buttonStyle}">View Note</button>
+        stars = getStarRating(review.rating);
+    }else {
+        stars = `No review available for ${teacherName}`
+    }
+    teacherDiv.innerHTML = `
+        <div class="text_secondary">${stars}</div>
+    `;
+    if(review){
+        teacherDiv.innerHTML += `
+           <button class="viewNote btn_view_review">View Review</button>
         `;
-        // Append the review display only if it hasn’t been added before
-        if (!classInfoDiv.querySelector('.review-appended')) {
-            classInfoDiv.appendChild(teacherDiv);
-        }
+    }
+    if (!classInfoDiv.querySelector('.review-appended')) {
+        classInfoDiv.appendChild(teacherDiv);
+    }
 
+    if (teacherDiv.querySelector('.viewNote')) {
         teacherDiv.querySelector('.viewNote').addEventListener('click', (e) => {
             e.preventDefault();
             openModal(review);
         });
-    } else {
-        console.log(`No review found for ${teacherName}`);
     }
 }
 
 // Simple modal for displaying notes
 function openModal(review) {
     const modal = document.createElement('div');
+    let stars = getStarRating(review.rating);
     modal.style.position = 'fixed';
     modal.style.top = '50%';
     modal.style.left = '50%';
     modal.style.transform = 'translate(-50%, -50%)';
     modal.style.backgroundColor = '#fff';
     modal.style.padding = '20px';
+    modal.style.zIndex = '9999';
     modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
     modal.innerHTML = `
-        <h4>Note</h4>
-        <div class="${cssClasses.textStyle}">Review: ${review.rating}/5</div>
-        <div class="${cssClasses.textStyle}">${review.note}</div>
-        <button class="${cssClasses.buttonStyle}" id="closeModal">Close</button>
+        <h4>Review</h4>
+        <div class="text_secondary">${stars}</div>
+        <br />
+        <div class="text_secondary">${review.note}</div>
+        <br />
+        <button class="text_secondary btn_view_review" id="closeModal">Close</button>
     `;
 
     document.body.appendChild(modal);
@@ -129,93 +164,72 @@ function openModal(review) {
     });
 }
 
-// Main Logic for Class Details Page
-if (window.location.href.includes('/class/details')) {
-    const classDetailsSection = '.css-19kzrtu';
-    const teacherNameSection = '.css-1k7cv3t';
-    const cssClasses = {
-        textStyle: 'MuiTypography-root MuiTypography-overline css-159wzko',
-        textStyleSecondary: 'MuiTypography-root MuiTypography-body1 css-l0jbfn',
-    };
+function main() {
+    // Main Logic for Class Details Page
+    if (window.location.href.includes('/class/details')) {
+        const classDetailsSection = '[data-cy="Class details tile"]';
+        const teacherNameSection = 'h3';
 
-    waitForElement(document, classDetailsSection, (classDetails) => {
-        const teacherNameElement = classDetails.querySelector(teacherNameSection);
-        const teacherName = getTeacherName(teacherNameElement);
-        appendReviewForm(classDetails, teacherName, cssClasses);
-    });
-}
-
-// Utility function to handle dynamic elements
-function observeTeacherList(teacherListSelector, teacherInfoSelector, onTeacherFound) {
-    const teacherList = document.querySelector(teacherListSelector);
-
-    if (!teacherList) {
-        // console.warn(`No teacher list found with selector: ${teacherListSelector}`);
-        return;
-    }
-
-    const observer = new MutationObserver((mutations) => {
-        document.querySelectorAll(teacherListSelector).forEach((teacher) => {
-            const teacherInfoElement = teacher.querySelector(teacherInfoSelector);
-            if (teacherInfoElement) {
-                const teacherName = getTeacherName(teacherInfoElement);
-
-                // Check if the teacher already has a review appended
-                if (!teacher.querySelector('.review-appended')) {
-                    onTeacherFound(teacher, teacherName);
-                }
-            }
+        waitForElement(document, classDetailsSection, (classDetails) => {
+            const teacherNameElement = classDetails.querySelector(teacherNameSection);
+            const teacherName = getTeacherName(teacherNameElement);
+            appendReviewForm(classDetails, teacherName);
         });
-    });
-
-    // Observe the teacher list for changes (e.g., new teachers or updates)
-    observer.observe(teacherList, {
-        childList: true,
-        subtree: true
-    });
-}
-
+    }
 
 // Main logic for the booking page
-if (window.location.href.includes('/account/booking')) {
-    const classesWrapperParentClassName = '.css-kzs7ph';
-    const classesWrapperClassName = `.css-j7qwjs > .box.display-block`;
-    const teacherClassInfoClassName = '.css-rdg5qz .css-16biaea .css-1wxaqej .css-1gbo16e .css-1wxaqej .css-1wkwmmc .css-1wxaqej';
-    const classNameElement = `${classesWrapperClassName} ${teacherClassInfoClassName}`
+    if (window.location.href.includes('/account/booking')) {
+        const classTypeInfos = '[data-cy="classInfo_classTypeInfo"]'
+        const availableClasses = '[data-cy="Available classes"]'
+        // Function to handle processing of each teacher element
+        async function processTeachers() {
+            for (const ele of document.querySelectorAll(`${classTypeInfos}`)) {
+                const classInfoDiv = ele.parentElement.parentElement;
+                if (classInfoDiv.querySelector('.review-appended')) {
+                    continue;
+                }
+                const teacherName = getTeacherName(ele);
+                if (teacherName !== "" && teacherName !== "group class" && teacherName !== "teacher will be assigned") {
+                    await appendReviewDisplay(classInfoDiv, teacherName);
+                }
+            }
+        }
 
-    // Function to handle processing of each teacher element
-    function processTeachers() {
-        document.querySelectorAll(classNameElement).forEach(ele => {
-            const classInfoDiv = ele.parentElement;
-            const teacherName = getTeacherName(ele);
-            if (teacherName !== "" && teacherName !== "group class" && teacherName !== "teacher will be assigned") {
-                appendReviewDisplay(classInfoDiv, teacherName);
+        waitForElement(document, classTypeInfos, async () => {
+            await processTeachers()
+
+            // Set up a MutationObserver to monitor any changes in the classes wrapper
+            const classesWrapper = document.querySelector(availableClasses);
+            if (availableClasses) {
+                const observer = new MutationObserver(async (mutations) => {
+                    await processTeachers();
+                });
+
+                observer.observe(classesWrapper, {
+                    childList: true,
+                    subtree: true
+                });
             }
         });
     }
+}
 
-    waitForElement(document, classesWrapperClassName, () => {
-        document.querySelectorAll(classesWrapperClassName).forEach((teacher) => {
-            waitForElement(teacher, teacherClassInfoClassName, () => {
-                waitForElement(document, classNameElement, () => {
-                    processTeachers()
-                })
-            });
-        });
+// Observe URL changes in single-page application
+let lastUrl = location.href;
 
-        // Set up a MutationObserver to monitor any changes in the classes wrapper
-        const classesWrapper = document.querySelector(classesWrapperParentClassName);
-        if (classesWrapper) {
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach(() => {
-                    processTeachers();
-                });
-            });
-
-            observer.observe(classesWrapper, {
-                childList: true,
-                subtree: true
-            });
+function observeUrlChanges() {
+    const observer = new MutationObserver(() => {
+        const currentUrl = location.href;
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            console.log(`%${currentUrl} != ${lastUrl}`);
+            main();
         }
     });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 }
+
+// Initial run
+main();
+observeUrlChanges();
