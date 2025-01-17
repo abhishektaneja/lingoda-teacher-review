@@ -1,0 +1,123 @@
+/* Form wrapper styles */
+.review_form_wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Flexbox layout for form rows */
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px; /* Add space between rows */
+}
+
+/* Label takes 1/3 of the row */
+.label-column {
+    flex: 0.35; /* Takes 1/3 of the available space */
+    padding-right: 8px; /* Adds space between the label and input */
+    margin-right: 8px;
+}
+
+/* Input and textarea take 2/3 of the row */
+.input-column {
+    flex: 2; /* Takes 2/3 of the available space */
+}
+
+.review_form_wrapper {
+    padding: 24px;
+    padding-top: 0px;
+    border-top: 1px solid;
+    border-color: rgba(5, 31, 78, 0.2);
+    padding-top: 24px;
+}
+.text_title {
+    margin: 0px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+    font-family: "Open Sans";
+    display: block;
+    color: inherit;
+    padding-bottom: 24px;
+}
+.text_secondary {
+    margin: 0px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    line-height: 1.125rem;
+    text-transform: uppercase;
+    font-family: "Open Sans";
+    display: block;
+    color: rgba(5, 31, 78, 0.7);
+}
+
+.btn_submit_review {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    text-transform: none;
+    font-family: "Open Sans";
+    min-width: 64px;
+    color: rgb(21, 59, 255);
+    width: 100%;
+    box-shadow: none;
+    outline: 0px;
+    margin: 0px;
+    text-decoration: none;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), border-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(21, 59, 255, 0.5);
+    border-image: initial;
+    border-radius: 4px;
+    padding: 13px 19px;
+}
+.btn_view_review {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-transform: none;
+    font-family: "Open Sans";
+    min-width: 64px;
+    color: rgb(21, 59, 255);
+    box-shadow: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+    letter-spacing: 0.2px;
+    outline: 0px;
+    margin: 0px;
+    text-decoration: none;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), border-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(21, 59, 255, 0.5);
+    border-image: initial;
+    border-radius: 4px;
+    padding: 7px 11px;
+}
