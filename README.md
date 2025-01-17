@@ -10,7 +10,11 @@ I build this extension to help me find the best teachers while booking classes, 
 
 ## Screenshots
 
-_TODO: Add screenshots of the extension in action (e.g., on the class details and booking pages)._
+### Booking Page
+![Booking Page](screenshots/booking_page.png)
+
+### Class Page
+![Class Page](screenshots/class_page.png)
 
 ## Installation
 
