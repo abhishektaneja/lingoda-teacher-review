@@ -16,8 +16,30 @@ function waitForElement(main, selector, callback) {
 }
 
 // Get cleaned-up teacher name
-function getTeacherName(teacherNameElement) {
-    return teacherNameElement.innerText.toLowerCase().replace(/(group class by |group class with )/g, "");
+function getTeacherName(element) {
+    const translations = {
+        en: ["group class with "],
+        de: ["gruppenstunde mit "],
+        es: ["clase de grupo con "],
+        fr: ["cours en groupe avec "],
+        ru: ["групповой урок с "]
+    };
+
+    let original = element.innerText.toLowerCase()
+    let name = element.innerText.toLowerCase();
+
+    // Flatten all translations into a single array
+    const phrases = Object.values(translations).flat();
+
+    // Replace all matching phrases
+    phrases.forEach(phrase => {
+        name = name.replace(new RegExp(`(${phrase})`, "gi"), "");
+    });
+
+    if (original === name) {
+        return ""
+    }
+    return name.trim();
 }
 
 // Save or update review in chrome storage
