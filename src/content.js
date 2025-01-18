@@ -18,10 +18,10 @@ function waitForElement(main, selector, callback) {
 // Get cleaned-up teacher name
 function getTeacherName(element) {
     const translations = {
-        en: ["group class with "],
+        en: ["group class with ", "group class by "],
         de: ["gruppenstunde mit "],
         es: ["clase de grupo con "],
-        fr: ["cours en groupe avec "],
+        fr: ["cours en groupe avec ", "Cours en groupe de "],
         ru: ["групповой урок с "]
     };
 
@@ -30,6 +30,7 @@ function getTeacherName(element) {
 
     // Flatten all translations into a single array
     const phrases = Object.values(translations).flat();
+    console.log(phrases)
 
     // Replace all matching phrases
     phrases.forEach(phrase => {
