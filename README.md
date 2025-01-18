@@ -1,5 +1,8 @@
 # Lingoda Review Extension
 
+[Chrome WebStore link](https://chromewebstore.google.com/detail/lingoda-class-review-help/lefejaphafhmdlljnckennenbcbnbdnm?authuser=0&hl=en-GB)
+
+
 A simple Chrome extension that allows users to rate Lingoda classes and teachers. You can leave a review with a rating (out of 5 stars) and a note, then view your reviews while booking future classes.
 I build this extension to help me find the best teachers while booking classes, since lingoda doesn't offer such a feature.
 
