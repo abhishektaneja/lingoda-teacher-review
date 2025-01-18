@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Lingoda class review helper",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Will help you to review teachers on lingoda so you can find the best ones while booking next class.",
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["*://learn.lingoda.com/en/account/*"],
+      "matches": ["*://learn.lingoda.com/*", "*://lingoda.com/*"],
       "js": ["content.js"],
       "css": ["main.css"]
     }
